@@ -11,25 +11,23 @@ namespace TradeUp.Controllers
     {
         private readonly ILogger<ResourceController> _logger;
         private readonly IResourceService _resourceService;
-        private readonly IResourceContributorService _resourceContributorService;
 
-        public ResourceController(ILogger<ResourceController> logger, IResourceService resourceService, IResourceContributorService resourceContributorService)
+        public ResourceController(ILogger<ResourceController> logger, IResourceService resourceService)
         {
             _logger = logger;
             _resourceService = resourceService;
-            _resourceContributorService = resourceContributorService;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
+        [HttpGet(Name = "GetResources")]
         public async Task<IEnumerable<Resource>> Get()
         {
             return await _resourceService.GetResources();
         }
 
-        [HttpPost(Name = "AddResourceContributor")]
-        public async Task<ActionResult> PostResourceContributor(AddResourceContributorRequest request)
+        [HttpPost(Name = "AddResource")]
+        public async Task<ActionResult> PostResource(AddResourceRequest request)
         {
-            return await _resourceContributorService.AddResourceContributor(request);
+            return await _resourceService.AddResource(request);
         }
     }
 }
