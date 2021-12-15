@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TradeUp.Domain;
 
 namespace TradeUp.Controllers
@@ -24,15 +25,56 @@ namespace TradeUp.Controllers
         {
             using (var context = new TradeUpContext())
             {
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-
-                context.SaveChanges();
-
                 return context.Resources
                     .OrderBy(i => i.Name)
                     .ToList();
             }
+        }
+
+        [HttpPost(Name = "AddResourceContributor")]
+        public async Task<ActionResult> PostResourceContributor(AddResourceContributorRequest request)
+        {
+            using (var context = new TradeUpContext())
+            {
+                var resource = await context.Resources
+                    .Where(x => x.Id == request.ResourceId)
+                    .FirstOrDefaultAsync();
+
+                if (resource == null)
+                {
+                    return NotFound();
+                }
+
+                var contributor = await context.Contributors
+                    .Where(x => x.Id == request.ContributorId)
+                    .FirstOrDefaultAsync();
+
+                if (contributor == null)
+                {
+                    return NotFound();
+                }
+
+                await context.ResourceContributors.AddAsync(new ResourceContributor()
+                {
+                    Resource = resource,
+                    Contributor = contributor,
+                    Frequency = request.Frequency,
+                    MinContributionRange = request.MinContributionRange,
+                    MaxContributionRange = request.MaxContributionRange,
+                });
+
+                await context.SaveChangesAsync();
+                return Ok();
+            }
+        }
+
+        public class AddResourceContributorRequest
+        {
+            public int ResourceId { get; set; }
+            public int ContributorId { get; set; }
+            public Frequency Frequency { get; set; }
+            public int MinContributionRange { get; set; }
+            public int MaxContributionRange { get; set; }
         }
     }
 }
