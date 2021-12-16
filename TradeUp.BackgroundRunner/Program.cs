@@ -5,6 +5,7 @@ using TradeUp.Domain;
 Console.WriteLine("Hello, World!");
 
 var resourceContributorService = new ResourceContributorService();
+// TODO this needs to come out of the DB in cases where the app is stopped and restarted
 var dayCount = 0;
 
 const int DAYS_IN_MONTH = 30;
@@ -33,22 +34,22 @@ while (true)
 
     if(processWeekly)
     {
-        await ProcessContributorsForFrequency(resourceContributors, Frequency.Weekly);
+        await ProcessContributorsForFrequency(resourceContributors, Frequency.Weekly, dayCount);
     }
 
     if (processMonthly)
     {
-        await ProcessContributorsForFrequency(resourceContributors, Frequency.Monthly);
+        await ProcessContributorsForFrequency(resourceContributors, Frequency.Monthly, dayCount);
     }
 
-    await ProcessContributorsForFrequency(resourceContributors, Frequency.Daily);
+    await ProcessContributorsForFrequency(resourceContributors, Frequency.Daily, dayCount);
 
     Console.WriteLine("Finished processing... sleeping for 5 seconds...");
     Thread.Sleep(5000);
 }
 
 
-async Task ProcessContributorsForFrequency(IList<ResourceContributor> resourceContributors, Frequency frequencyToProcess)
+async Task ProcessContributorsForFrequency(IList<ResourceContributor> resourceContributors, Frequency frequencyToProcess, int dayCount)
 {
     var contributorsToProcess = resourceContributors.Where(x => x.Frequency == frequencyToProcess).ToList();
     Console.WriteLine($"Processing {frequencyToProcess.ToString()} contributors: {contributorsToProcess.Count} to process...");
@@ -60,6 +61,6 @@ async Task ProcessContributorsForFrequency(IList<ResourceContributor> resourceCo
 
     foreach (var resourceContributor in contributorsToProcess)
     {
-        await resourceContributorService.ProcessContribution(resourceContributor);
+        await resourceContributorService.ProcessContribution(resourceContributor, dayCount);
     }
 }

@@ -9,7 +9,7 @@ namespace TradeUp.Core.Services
     {
         Task<ActionResult> AddResourceContributor(AddResourceContributorRequest request);
         Task<IList<ResourceContributor>> GetResourceContributors();
-        Task ProcessContribution(ResourceContributor toProcess);
+        Task ProcessContribution(ResourceContributor toProcess, int dayCount);
     }
     public class ResourceContributorService : IResourceContributorService
     {
@@ -57,6 +57,7 @@ namespace TradeUp.Core.Services
             return await context.ResourceContributors
                 .Include(x => x.Resource)
                 .Include(x => x.Contributor)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -64,25 +65,28 @@ namespace TradeUp.Core.Services
         {
             using var context = new TradeUpContext();
 
-            var resourceToModify = await context.Resources.Where(x => x.Id == toProcess.Resource.Id).FirstOrDefaultAsync();
-            var contributor = await context.Contributors.Where(x => x.Id == toProcess.Contributor.Id).FirstOrDefaultAsync();
+            var trackedResouceContributor = await context.ResourceContributors
+                .Where(x => x.Id == toProcess.Id)
+                .Include(x => x.Contributor)
+                .Include(x => x.Resource)
+                .FirstOrDefaultAsync();
 
-            if(contributor == null || resourceToModify == null)
+            if(trackedResouceContributor == null)
             {
-                throw new ArgumentException("Invalid Contributor or Resource passed in to ProcessContribution");
+                throw new ArgumentException("Invalid ResourceContributor passed in to ProcessContribution");
             }
 
             Random rand = new Random();
-            var resourcesToAdd = rand.Next(toProcess.MinContributionRange, toProcess.MaxContributionRange) * contributor.ContributionFactor;
+            var resourcesToAdd = rand.Next(trackedResouceContributor.MinContributionRange, trackedResouceContributor.MaxContributionRange) * trackedResouceContributor.Contributor.ContributionFactor;
 
-            resourceToModify.CountAvailable += resourcesToAdd;
+            trackedResouceContributor.Resource.CountAvailable += resourcesToAdd;
 
             await context.ResourceContributionHistory.AddAsync(new ResourceContributionHistory()
             {
-                ResourceContributor = toProcess,
+                ResourceContributor = trackedResouceContributor,
                 Day = dayCount,
-                ResourcePriceAtTimeOfContribution = resourceToModify.Price,
-                ResourceCount = resourceToModify.CountAvailable,
+                ResourcePriceAtTimeOfContribution = trackedResouceContributor.Resource.Price,
+                ResourceCount = trackedResouceContributor.Resource.CountAvailable,
             });
 
             await context.SaveChangesAsync();
