@@ -7,12 +7,12 @@ namespace TradeUp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public partial class ResourceContributerController : ControllerBase
+    public partial class ResourceContributorController : ControllerBase
     {
-        private readonly ILogger<ResourceContributerController> _logger;
+        private readonly ILogger<ResourceContributorController> _logger;
         private readonly IResourceContributorService _resourceContributorService;
 
-        public ResourceContributerController(ILogger<ResourceContributerController> logger, IResourceContributorService resourceContributorService)
+        public ResourceContributorController(ILogger<ResourceContributorController> logger, IResourceContributorService resourceContributorService)
         {
             _logger = logger;
             _resourceContributorService = resourceContributorService;
