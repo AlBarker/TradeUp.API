@@ -60,7 +60,7 @@ namespace TradeUp.Core.Services
                 .ToListAsync();
         }
 
-        public async Task ProcessContribution(ResourceContributor toProcess)
+        public async Task ProcessContribution(ResourceContributor toProcess, int dayCount)
         {
             using var context = new TradeUpContext();
 
@@ -76,6 +76,14 @@ namespace TradeUp.Core.Services
             var resourcesToAdd = rand.Next(toProcess.MinContributionRange, toProcess.MaxContributionRange) * contributor.ContributionFactor;
 
             resourceToModify.CountAvailable += resourcesToAdd;
+
+            await context.ResourceContributionHistory.AddAsync(new ResourceContributionHistory()
+            {
+                ResourceContributor = toProcess,
+                Day = dayCount,
+                ResourcePriceAtTimeOfContribution = resourceToModify.Price,
+                ResourceCount = resourceToModify.CountAvailable,
+            });
 
             await context.SaveChangesAsync();
         }
