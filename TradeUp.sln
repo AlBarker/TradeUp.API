@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUp", "TradeUp\TradeUp.csproj", "{D69FF098-A9F9-419B-A869-3EDA49042A3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUp.API", "TradeUp\TradeUp.API.csproj", "{D69FF098-A9F9-419B-A869-3EDA49042A3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUp.Core", "TradeUp.Core\TradeUp.Core.csproj", "{2358EA29-7033-4BEA-B4BE-B433133092ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUp.Core", "TradeUp.Core\TradeUp.Core.csproj", "{2358EA29-7033-4BEA-B4BE-B433133092ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUp.Domain", "TradeUp.Domain\TradeUp.Domain.csproj", "{A374337E-DB75-496A-AB34-C28EBFF419C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUp.Domain", "TradeUp.Domain\TradeUp.Domain.csproj", "{A374337E-DB75-496A-AB34-C28EBFF419C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUp.BackgroundRunner", "TradeUp.BackgroundRunner\TradeUp.BackgroundRunner.csproj", "{D5511610-6D40-4F9E-9343-C12D31BFAA95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{A374337E-DB75-496A-AB34-C28EBFF419C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A374337E-DB75-496A-AB34-C28EBFF419C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A374337E-DB75-496A-AB34-C28EBFF419C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5511610-6D40-4F9E-9343-C12D31BFAA95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5511610-6D40-4F9E-9343-C12D31BFAA95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5511610-6D40-4F9E-9343-C12D31BFAA95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5511610-6D40-4F9E-9343-C12D31BFAA95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
