@@ -54,7 +54,10 @@ namespace TradeUp.Core.Services
         {
             using var context = new TradeUpContext();
 
-            return await context.ResourceContributors.ToListAsync();
+            return await context.ResourceContributors
+                .Include(x => x.Resource)
+                .Include(x => x.Contributor)
+                .ToListAsync();
         }
 
         public async Task ProcessContribution(ResourceContributor toProcess)

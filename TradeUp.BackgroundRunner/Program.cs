@@ -33,31 +33,33 @@ while (true)
 
     if(processWeekly)
     {
-        ProcessWeekly(resourceContributors.Where(x => x.Frequency == Frequency.Weekly).ToList());
+        await ProcessContributorsForFrequency(resourceContributors, Frequency.Weekly);
     }
 
     if (processMonthly)
     {
-        ProcessMonthly(resourceContributors.Where(x => x.Frequency == Frequency.Monthly).ToList());
+        await ProcessContributorsForFrequency(resourceContributors, Frequency.Monthly);
     }
 
-    ProcessDaily(resourceContributors.Where(x => x.Frequency == Frequency.Daily).ToList());
+    await ProcessContributorsForFrequency(resourceContributors, Frequency.Daily);
 
-    Console.WriteLine("Finished processing... sleeping for 5 seoncds now...");
+    Console.WriteLine("Finished processing... sleeping for 5 seconds...");
     Thread.Sleep(5000);
 }
 
-void ProcessWeekly(IList<ResourceContributor> resourceContributors)
-{
-    Console.WriteLine($"Processing weekly contributors: {resourceContributors.Count} to process...");
-}
 
-void ProcessMonthly(IList<ResourceContributor> resourceContributors)
+async Task ProcessContributorsForFrequency(IList<ResourceContributor> resourceContributors, Frequency frequencyToProcess)
 {
-    Console.WriteLine($"Processing monthly contributors: {resourceContributors.Count} to process...");
-}
+    var contributorsToProcess = resourceContributors.Where(x => x.Frequency == frequencyToProcess).ToList();
+    Console.WriteLine($"Processing {frequencyToProcess.ToString()} contributors: {contributorsToProcess.Count} to process...");
 
-void ProcessDaily(IList<ResourceContributor> resourceContributors)
-{
-    Console.WriteLine($"Processing daily contributors: {resourceContributors.Count} to process...");
+    if (contributorsToProcess.Count == 0)
+    {
+        return;
+    }
+
+    foreach (var resourceContributor in contributorsToProcess)
+    {
+        await resourceContributorService.ProcessContribution(resourceContributor);
+    }
 }
