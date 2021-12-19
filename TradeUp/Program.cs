@@ -11,6 +11,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IResourceService, ResourceService>();
 builder.Services.AddSingleton<IResourceContributorService, ResourceContributorService>();
+builder.Services.AddSingleton<IResourceConsumerService, ResourceConsumerService>();
 
 var app = builder.Build();
 
