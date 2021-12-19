@@ -5,6 +5,7 @@ using TradeUp.Domain;
 Console.WriteLine("Hello, World!");
 
 var resourceContributorService = new ResourceContributorService();
+var resourceConsumerService = new ResourceConsumerService();
 // TODO this needs to come out of the DB in cases where the app is stopped and restarted
 var dayCount = 0;
 
@@ -29,20 +30,24 @@ while (true)
 
 
     var resourceContributors = await resourceContributorService.GetResourceContributors();
+    var resourceConsumers = await resourceConsumerService.GetResourceConsumers();
 
     Console.WriteLine($"Found {resourceContributors.Count} resource contributors to process");
 
     if(processWeekly)
     {
         await ProcessContributorsForFrequency(resourceContributors, Frequency.Weekly, dayCount);
+        await ProcessConsumersForFrequency(resourceConsumers, Frequency.Weekly, dayCount);
     }
 
     if (processMonthly)
     {
         await ProcessContributorsForFrequency(resourceContributors, Frequency.Monthly, dayCount);
+        await ProcessConsumersForFrequency(resourceConsumers, Frequency.Monthly, dayCount);
     }
 
     await ProcessContributorsForFrequency(resourceContributors, Frequency.Daily, dayCount);
+    await ProcessConsumersForFrequency(resourceConsumers, Frequency.Daily, dayCount);
 
     Console.WriteLine("Finished processing... sleeping for 5 seconds...");
     Thread.Sleep(5000);
@@ -52,7 +57,7 @@ while (true)
 async Task ProcessContributorsForFrequency(IList<ResourceContributor> resourceContributors, Frequency frequencyToProcess, int dayCount)
 {
     var contributorsToProcess = resourceContributors.Where(x => x.Frequency == frequencyToProcess).ToList();
-    Console.WriteLine($"Processing {frequencyToProcess.ToString()} contributors: {contributorsToProcess.Count} to process...");
+    Console.WriteLine($"Processing {frequencyToProcess} contributors: {contributorsToProcess.Count} to process...");
 
     if (contributorsToProcess.Count == 0)
     {
@@ -62,5 +67,21 @@ async Task ProcessContributorsForFrequency(IList<ResourceContributor> resourceCo
     foreach (var resourceContributor in contributorsToProcess)
     {
         await resourceContributorService.ProcessContribution(resourceContributor, dayCount);
+    }
+}
+
+async Task ProcessConsumersForFrequency(IList<ResourceConsumer> resourceConsumers, Frequency frequencyToProcess, int dayCount)
+{
+    var consumersToProcess = resourceConsumers.Where(x => x.Frequency == frequencyToProcess).ToList();
+    Console.WriteLine($"Processing {frequencyToProcess} contributors: {consumersToProcess.Count} to process...");
+
+    if (consumersToProcess.Count == 0)
+    {
+        return;
+    }
+
+    foreach (var resourceConsumer in consumersToProcess)
+    {
+        await resourceConsumerService.ProcessConsumption(resourceConsumer, dayCount);
     }
 }
