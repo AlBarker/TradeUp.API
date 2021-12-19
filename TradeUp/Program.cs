@@ -9,6 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddSingleton<IConsumerService, ConsumerService>();
 builder.Services.AddSingleton<IResourceService, ResourceService>();
 builder.Services.AddSingleton<IResourceContributorService, ResourceContributorService>();
 builder.Services.AddSingleton<IResourceConsumerService, ResourceConsumerService>();
