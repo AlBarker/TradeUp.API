@@ -89,6 +89,8 @@ namespace TradeUp.Core.Services
                 ResourceCount = trackedResouceContributor.Resource.CountAvailable,
             });
 
+            Console.WriteLine($"{trackedResouceContributor.Resource.CountAvailable} {trackedResouceContributor.Resource.Name} now available");
+
             await context.SaveChangesAsync();
         }
     }
