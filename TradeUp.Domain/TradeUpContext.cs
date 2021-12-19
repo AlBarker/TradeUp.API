@@ -15,6 +15,9 @@ namespace TradeUp.Domain
         public DbSet<Contributor> Contributors { get; set; }
         public DbSet<ResourceContributor> ResourceContributors { get; set; }
         public DbSet<ResourceContributionHistory> ResourceContributionHistory { get; set; }
+        public DbSet<Consumer> Consumers { get; set; }
+        public DbSet<ResourceConsumer> ResourceConsumers { get; set; }
+        public DbSet<ResourceConsumptionHistory> ResourceConsumptionHistory { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
