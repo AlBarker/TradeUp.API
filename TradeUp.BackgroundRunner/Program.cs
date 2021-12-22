@@ -48,7 +48,7 @@ while (true)
 
     await ProcessContributorsForFrequency(resourceContributors, Frequency.Daily, dayCount);
     await ProcessConsumersForFrequency(resourceConsumers, Frequency.Daily, dayCount);
-
+        
     Console.WriteLine("Finished processing... sleeping for 5 seconds...");
     Thread.Sleep(5000);
 }

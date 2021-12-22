@@ -1,3 +1,4 @@
+using TradeUp.API.HubConfig;
 using TradeUp.Core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,22 @@ builder.Services.AddSingleton<IResourceService, ResourceService>();
 builder.Services.AddSingleton<IResourceContributorService, ResourceContributorService>();
 builder.Services.AddSingleton<IResourceConsumerService, ResourceConsumerService>();
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      builder =>
+                      {
+                          builder
+                          .AllowCredentials()
+                          .WithOrigins("http://localhost:4200",
+                                              "http://www.contoso.com");
+                      });
+});
+
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -28,5 +45,10 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ResourceHub>("/resource");
+
+
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.Run();

@@ -8,7 +8,7 @@ namespace TradeUp.Core.Services
 {
     public interface IResourceService
     {
-        public Task<IList<Resource>> GetResources();
+        public IList<Resource> GetResources();
         public Task<ActionResult> AddResource(AddResourceRequest request);
     }
 
@@ -20,13 +20,13 @@ namespace TradeUp.Core.Services
             this.logger = logger;
         }
 
-        public async Task<IList<Resource>> GetResources()
+        public IList<Resource> GetResources()
         {
             using (var context = new TradeUpContext())
             {
-                return await context.Resources
+                return context.Resources
                     .OrderBy(i => i.Name)
-                    .ToListAsync();
+                    .ToList();
             }
         }
 
